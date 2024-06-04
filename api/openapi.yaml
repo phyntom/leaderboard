@@ -1,0 +1,196 @@
+---
+openapi: 3.0.1
+info:
+    title: Leaderboard Service
+    description: Over 99 billion Leaderboards served and counting.
+    version: 1.0.0
+security:
+    - BearerAuth: []
+servers:
+    - url: "/api"
+paths:
+    "/v1/leaderboard/{gameMode}/{period}":
+        get:
+            summary: Retrieve the leaderboard entries.
+            description: Retrieve the leaderboard entries.
+            operationId: GetLeaderboard
+            tags:
+                - LeaderboardValues
+            parameters:
+                - name: gameMode
+                  in: path
+                  required: true
+                  schema:
+                      "$ref": "#/components/schemas/GameMode"
+                  description: The gameMode identifier.
+                - name: period
+                  in: path
+                  required: true
+                  schema:
+                      "$ref": "#/components/schemas/Period"
+                  description: The leaderboard aggregation period.
+                - name: startRank
+                  in: query
+                  schema:
+                      type: number
+                      format: double
+                  description: The start rank (default 0) to include in the results.
+                - name: count
+                  in: query
+                  schema:
+                      type: number
+                      format: int32
+                  description: The number of entries (default 10) to include in the results.
+                      Max is 100.
+            responses:
+                '200':
+                    description: LeaderboardState
+                    content:
+                        application/json:
+                            schema:
+                                "$ref": "#/components/schemas/LeaderboardState"
+                '403':
+                    description: '__errors.com.epicgames.common.forbidden__: The access token
+            is not authorized to access this resource.'
+                    content:
+                        application/json:
+                            schema:
+                                "$ref": "#/components/schemas/ErrorContent"
+                '404':
+                    description: '__errors.com.epicgames.leaderboard.leaderboard_not_found__:
+            The requested leaderboard does not exist under this gameMode and period.'
+                    content:
+                        application/json:
+                            schema:
+                                "$ref": "#/components/schemas/ErrorContent"
+    "/v1/leaderboard/player/{playerId}":
+        get:
+            summary: Retrieve all leaderboard data for the given playerId.
+            description: Retrieve all leaderboard data for the given playerId.
+            operationId: GetPlayerPositions
+            tags:
+                - LeaderboardValues
+            parameters:
+                - name: playerId
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+                  description: A player / user id.
+            responses:
+                '200':
+                    description: Leaderboard summary for the given playerId
+                    content:
+                        application/json:
+                            schema:
+                                "$ref": "#/components/schemas/PlayerLeaderboardSummary"
+                '204':
+                    description: No data is currently stored for the given playerId.
+components:
+    securitySchemes:
+        BearerAuth:
+            type: http
+            scheme: bearer
+            bearerFormat: JWT
+    schemas:
+        PlayerLeaderboardEntry:
+            type: object
+            required:
+                - leaderboard
+                - rank
+                - elims
+            properties:
+                leaderboard:
+                    "$ref": "#/components/schemas/LeaderboardDefinition"
+                rank:
+                    type: integer
+                    format: int32
+                elims:
+                    type: number
+                    format: double
+        PlayerLeaderboardSummary:
+            type: object
+            required:
+                - player
+                - leaderboards
+            properties:
+                player:
+                    "$ref": "#/components/schemas/Player"
+                leaderboards:
+                    type: array
+                    items:
+                        "$ref": "#/components/schemas/PlayerLeaderboardEntry"
+        ErrorContent:
+            type: object
+            required:
+                - errorCode
+            properties:
+                errorCode:
+                    type: string
+                errorMessage:
+                    type: string
+        LeaderboardDefinition:
+            type: object
+            required:
+                - gameMode
+                - period
+                - start
+                - end
+            properties:
+                gameMode:
+                    "$ref": "#/components/schemas/GameMode"
+                period:
+                    "$ref": "#/components/schemas/Period"
+                start:
+                    type: string
+                    format: date-time
+                end:
+                    type: string
+                    format: date-time
+        Player:
+            type: object
+            properties:
+                id:
+                    type: string
+                displayName:
+                    type: string
+        GameMode:
+            type: string
+            enum:
+                - SOLOS
+                - DUOS
+                - TRIOS
+                - SQUADS
+        Period:
+            type: string
+            enum:
+                - DAILY
+                - WEEKLY
+                - ALL_TIME
+        LeaderboardEntry:
+            type: object
+            required:
+                - player
+                - rank
+                - elims
+            properties:
+                player:
+                    "$ref": "#/components/schemas/Player"
+                rank:
+                    type: integer
+                    format: int32
+                elims:
+                    type: number
+                    format: double
+        LeaderboardState:
+            type: object
+            required:
+                - leaderboard
+                - entries
+            properties:
+                leaderboard:
+                    "$ref": "#/components/schemas/LeaderboardDefinition"
+                entries:
+                    type: array
+                    items:
+                        "$ref": "#/components/schemas/LeaderboardEntry"

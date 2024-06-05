@@ -114,22 +114,20 @@ Here is a simple representation of the UI components tree:
 │   └── no data component
 ├── └── pagination component (Optional)
 ```
-**Frontend:** The app will be build following single page application architecture using Next.js as the front-end framework and will be divided into components that will be responsible for rendering different parts of the application  
+* **Frontend (Web Application)**
+  * A React.js application that interacts with backend services.
+  * Provides the UI for filtering and displaying leaderboard data.
+  * Uses WebSockets to handle real-time updates.
 
-
-**Styling & UI component:** The app will be styled using tailwindcss and [shadcn](https://ui.shadcn.com) UI library to provide a consistent and responsive design across different devices.  
-
-
-**State Management:** The components will be connected to a state management library such as Redux or React Context API to manage the application state and data flow.  
-
-
-**API Integration:** Axios or Fetch API to communicate with the backend services to fetch leaderboard data
-
-
-**React Time Update** For this type of architecture, we have two options to update the leaderboard data in real-time assuming that the server support socket event broadcasting
+* **Styling & UI component:** 
+The app will be styled using tailwindcss and [shadcn](https://ui.shadcn.com) UI library to provide a consistent and responsive design across different devices.  
+* **State Management:** 
+  * The components will be connected to a state management library such as Redux or React Context API to manage the application state and data flow.  
+* **API Integration:** Axios or Fetch API to communicate with the backend services to fetch leaderboard data
+* **React Time Update** For this type of architecture, we have two options to update the leaderboard data in real-time assuming that the server support socket event broadcasting
 - Option **#1**
   - Client-Side Setup:
-    - Install the Socket.IO client library in your React or Next.js project. 
+    - Install the Socket.IO client library in your React.js. 
     - Use the useEffect hook to establish a connection to the Socket.IO server upon component mount. 
     - Listen for socket events that broadcast leaderboard updates. 
     - Upon receiving updates, update your component's state and trigger a re-render to reflect the changes in the UI.
@@ -141,6 +139,20 @@ Here is a simple representation of the UI components tree:
 <!---
 Include any diagrams of flows through the solution such as decision trees or data flow.
 --->
+**General Flow**
+1. User accesses the leaderboard webpage. 
+2. Leaderboard web application perform authentication and authorization using the Identity team OAuth2 compliant Authorization Server to get JWT token L
+3. Leaderboard web application fetches the leaderboard data from the Leaderboard Service
+4. Leaderboard Service returns the data to the Leaderboard web application
+5. Leaderboard web application displays the leaderboard data to the user
+6. Leaderboard web application establishes a socket connection to the server to listen for leaderboard updates
+7. Leaderboard Service broadcasts leaderboard updates to the connected clients
+8. Leaderboard web application receives the update and updates the leaderboard data in real-time 
+9. User selects filters (game mode, period, player). 
+10. Web application requests filtered data from the Leaderboard Service 
+11. Leaderboard Service fetches and returns filtered data. 
+12. Web application displays filtered data.
+
 Here is the sequence diagram that illustrates the flow of the leaderboard web application
 ![image](assets/SequenceDiagram.png)
 ### Data models
@@ -239,23 +251,48 @@ Detailed description of how to achieve the design, additional diagrams, and anal
 <!---
 List and explain any proposed technology choices such as languages, frameworks, database technologies, or cloud solutions. 
 --->
+* **Frontend**: React.js is strong choice for building interactive and responsive user interface. 
+* **Backend**: Node.js with Express for building scalable service that will offer different API to be consumed by the Fronted. 
+* **Database**: PostgreSQL or MongoDB for high performance and scalability. 
+* **Authentication**: OAuth2 with JWT for secure access. 
+* **Real-time Updates**: WebSockets for real-time communication.
+  There are some cloud service that can help to implement this feature easily like Firebase Realtime Database, Supabase, or Convex
+    * Firebase Realtime Database: This is a NoSQL database from Google that is specifically designed for real-time applications. 
+    It allows you to store and retrieve data with low latency, making it a good choice for applications that need to update data 
+    frequently and see those changes reflected immediately by all users
+    * Supabase: Supabase is an open-source alternative to Firebase that provides a suite of tools for building real-time applications.
+      Supabase offers real-time capabilities through their Realtime server containers. You'll need to spin up and manage these containers alongside your main Supabase installation
+    * Convex : Convex is a real-time database that allows you to build real-time applications without writing any backend code. 
+      Convex provides a simple API that you can use to store and retrieve data in real-time, making it easy to build applications that update in real-time
 ### Dependencies
 <!---
 List any external dependencies of your solution (ie a service with authentication may have dependency on an identity provider)
 --->
+OAuth2 compliant Authorization Server for authentication.
+Reliable and scalable database service.
+API Gateway for routing and security ( optional but may be recommended in future)
+WebSocket server for managing real-time connections.
 ### Monitoring
 <!---
 Document any metrics or alerting cases to monitor the health of the application.  
 --->
+
 ### Key metrics
 <!---
 Document key metrics to capture to evaluate user engagement and inform future product development.
 --->
+**Number of active users**: This metric will help us to know how may users are actively using our leaderboard services.
+**API response time**: This is a critical metric to capture since it directly impact the user experience.
+**User engagement metrics**: This includes the number of searches, filters, and interactions with the leaderboard data.
+**WebSocket connection metrics**: We would like to monitor the number of active connections, the number of messages sent and received, and the latency of the WebSocket connections.
 
 ## Alternative Solutions
 <!---
 Document any other solutions considered, why they are not preferred, and whether certain conditions may warrant their reconsideration.
 --->
+* **HTTP Polling**: This is a common approach to real-time updates where the client makes periodic requests to the server to check for updates.The reason it may not be
+the preferred solution is that it is inefficient and resource intensive compared to WebSocket
+* **Server Sent Event (SSE)**: This is a strong contender but has some disadvantages like it is unidirectional and does not support full-duplex communication like WebSocket
 
 ## Open Questions
 <!---

@@ -114,17 +114,24 @@ Here is a simple representation of the UI components tree:
 │   └── no data component
 ├── └── pagination component (Optional)
 ```
-* **Frontend (Web Application)**
-  * A React.js application that interacts with backend services.
-  * Provides the UI for filtering and displaying leaderboard data.
+
+##### **Frontend (Web Application)**
+
+  * A React.js application that interacts with backend services. 
+  * Provides the UI for filtering and displaying leaderboard data. 
   * Uses WebSockets to handle real-time updates.
 
-* **Styling & UI component:** 
-The app will be styled using tailwindcss and [shadcn](https://ui.shadcn.com) UI library to provide a consistent and responsive design across different devices.  
-* **State Management:** 
-  * The components will be connected to a state management library such as Redux or React Context API to manage the application state and data flow.  
-* **API Integration:** Axios or Fetch API to communicate with the backend services to fetch leaderboard data
-* **React Time Update** For this type of architecture, we have two options to update the leaderboard data in real-time assuming that the server support socket event broadcasting
+##### **Styling & UI component:**
+* The app will be styled using tailwindcss and [shadcn](https://ui.shadcn.com) UI library to provide a consistent and responsive design across different devices. 
+
+##### State Management 
+* The components will be connected to a state management library such as Redux or React Context API to manage the application state and data flow.
+
+##### **API Integration:** 
+* Axios or Fetch API to communicate with the backend services to fetch leaderboard data
+
+##### **React Time Update** 
+For this type of architecture, we have two options to update the leaderboard data in real-time assuming that the server support socket event broadcasting
 - Option **#1**
   - Client-Side Setup:
     - Install the Socket.IO client library in your React.js. 
@@ -132,8 +139,6 @@ The app will be styled using tailwindcss and [shadcn](https://ui.shadcn.com) UI 
     - Listen for socket events that broadcast leaderboard updates. 
     - Upon receiving updates, update your component's state and trigger a re-render to reflect the changes in the UI.
 1. Option **#2**
-
-
 
 ### Sequence diagrams
 <!---
@@ -268,10 +273,10 @@ List and explain any proposed technology choices such as languages, frameworks, 
 <!---
 List any external dependencies of your solution (ie a service with authentication may have dependency on an identity provider)
 --->
-OAuth2 compliant Authorization Server for authentication.
-Reliable and scalable database service.
-API Gateway for routing and security ( optional but may be recommended in future)
-WebSocket server for managing real-time connections.
+* OAuth2 compliant Authorization Server for authentication.
+* Reliable and scalable database service.
+* API Gateway for routing and security ( optional but may be recommended in future)
+* WebSocket server for managing real-time connections.
 ### Monitoring
 <!---
 Document any metrics or alerting cases to monitor the health of the application.  
@@ -281,10 +286,10 @@ Document any metrics or alerting cases to monitor the health of the application.
 <!---
 Document key metrics to capture to evaluate user engagement and inform future product development.
 --->
-**Number of active users**: This metric will help us to know how may users are actively using our leaderboard services.
-**API response time**: This is a critical metric to capture since it directly impact the user experience.
-**User engagement metrics**: This includes the number of searches, filters, and interactions with the leaderboard data.
-**WebSocket connection metrics**: We would like to monitor the number of active connections, the number of messages sent and received, and the latency of the WebSocket connections.
+* **Number of active users**: This metric will help us to know how may users are actively using our leaderboard services.
+* **API response time**: This is a critical metric to capture since it directly impact the user experience.
+* **User engagement metrics**: This includes the number of searches, filters, and interactions with the leaderboard data.
+* **WebSocket connection metrics**: We would like to monitor the number of active connections, the number of messages sent and received, and the latency of the WebSocket connections.
 
 ## Alternative Solutions
 <!---

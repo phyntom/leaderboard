@@ -10,7 +10,7 @@ Provide a brief summary to set context for this document
 --->
 The Leaderboard web application is a web application for showcasing player rankings based on total number of eliminations across various game modes [solos, duos, trios, squads].
 This web application will display real-time leaderboard data to users,ensuring that user can get their ranking compared to other users. This will enhance player
-experience and boost their engagment with gamers community by sharing their achievements
+experience and boost their engagement with gamers community by sharing their achievements
 ### Problem statement
 <!---
 Provide a brief statement of the features of this solution and the primary challenges being addressed by the design
@@ -23,7 +23,7 @@ The primary challenges includes:
 - Providing a search feature that is efficient, fast, and accurate
 
 ## Keywords
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this specification are to be interpreted as described in [RFC2119](https://www.rfc-editor.org/rfc/rfc2119).
+The keywords "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this specification are to be interpreted as described in [RFC2119](https://www.rfc-editor.org/rfc/rfc2119).
 <!---
 Additional keywords should be defined here.
 --->
@@ -66,6 +66,7 @@ Things that are not intended to be defined by this document.
 - Game logic or in-game features unrelated to the leaderboard data display.
 - Authentication,Authorization and token generation services handled by identity team
 - Data storage and management of leaderboard data
+- Pagination for displayed leaderboard data. This will only be provided as an optional feature in case the data to display may increase according to the requirements
 ## Architecture/Design
 <!---
 Description of the architecture and diagrams. Feel free to add additional subheadings as needed, such as Alternatives
@@ -74,12 +75,61 @@ Description of the architecture and diagrams. Feel free to add additional subhea
 <!---
 Include any description or wireframe of the solution UI design.
 --->
-The UI design will follow the provided wireframe [Leaderboard](assets/Leaderboard.png) and will include the following components
-- A search bar to search for a specific player by name
+The UI design will follow the provided wireframe [Leaderboard](assets/Leaderboard.png) and components can be extracted from the provided wireframe like this from top to bottom:
+- Main App Component which represent the whole application in the tree
+- A header component that contains the application title and profile component
+- A profile component that contains the player profile picture or avatar
+- A SearchBox component to search for a specific player by name
+- Mode filter component to filter the leaderboard data based on game mode
+- Period filter component to filter the leaderboard data based on period
+- A leaderboard component or datatable component that displays the leaderboard data
+- A pagination component to navigate through the leaderboard data ( Optional)
+- A component to display a message indicating that no data is available (Provide separate component for this)
+- A page display component indicating the current page number and total number of pages (Optional)
+
+Here is a picture of the modified wireframe that include the breakdown of the components
+
+![image](https://drive.google.com/uc?export=view&id=1CtrhKcCBuokm3KAz-3tJ9xteRti449vS)
 ### Architecture design
 <!---
 Include any diagrams and discussion of solution architecture.
 --->
+Here is a simple representation of the UI components tree:
+```
+├── main-app component
+│   ├── header component
+│   │   ├── title
+│   │   └── profile component
+│   ├── searchbox component
+│   └── mode filter component
+│   └── period filter component
+│   └── leaderboard component
+│   └── no data component
+├── └── pagination component (Optional)
+```
+**Frontend:** The app will be build following single page application architecture using Next.js as the front-end framework and will be divided into components that will be responsible for rendering different parts of the application  
+
+
+**Styling & UI component:** The app will be styled using tailwindcss and [shadcn](https://ui.shadcn.com) UI library to provide a consistent and responsive design across different devices.  
+
+
+**State Management:** The components will be connected to a state management library such as Redux or React Context API to manage the application state and data flow.  
+
+
+**API Integration:** Axios or Fetch API to communicate with the backend services to fetch leaderboard data
+
+
+**React Time Update** For this type of architecture, we have two options to update the leaderboard data in real-time assuming that the server support socket event broadcasting
+- Option **#1**
+  - Client-Side Setup:
+    - Install the Socket.IO client library in your React or Next.js project. 
+    - Use the useEffect hook to establish a connection to the Socket.IO server upon component mount. 
+    - Listen for socket events that broadcast leaderboard updates. 
+    - Upon receiving updates, update your component's state and trigger a re-render to reflect the changes in the UI.
+1. Option **#2**
+
+
+
 ### Sequence diagrams
 <!---
 Include any diagrams of flows through the solution such as decision trees or data flow.
@@ -88,7 +138,90 @@ Include any diagrams of flows through the solution such as decision trees or dat
 <!---
 Include any data modeling or schemas, including relationships between different data models
 --->
+The frontend will handle data models corresponding to the API response provided in the API specification
+From the given API specification, we can define the following initial data models that can be broken down into interfaces or types in the codebase
 
+**Player data model**
+```json
+{
+  "id": "string",
+  "name": "string",
+  "profilePicture": "string"
+}
+```
+**Leaderboard data model**
+```json
+{
+  "leaderboard": {
+    "gameMode": "string",
+    "period": "string",
+    "start": "datetime",
+    "end": "datetime",
+    "entries": [
+      {
+        "player": "Player",
+        "rank": "number",
+        "eliminations": "number"
+      }
+    ]
+  }
+}
+```
+
+**PlayerLeaderBoard data model**
+```json
+{
+  "player": "Player",
+  "leaderboards": [
+    {
+      "leaderboard": "Leaderboard",
+      "rank": "number",
+      "eliminations": "number"
+    }
+  ]
+}
+```
+
+
+If we consider that we will use Typescript the data models will be defined as interfaces
+```typescript
+
+type Period = 'DAILY' | 'WEEKLY' | 'ALL_TIME';
+
+type GameMode = "SOLOS" | "DUOS" | "TRIOS" | "SQUADS"
+
+interface Player {
+    id: string;
+    displayName: string;
+    profilePicture?: string;
+}
+
+interface Entry {
+    player: Player;
+    rank: number;
+    elims: number;
+}
+
+interface Leaderboard {
+    gameMode: GameMode;
+    period: Period;
+    start: string;
+    end: string;
+}
+
+interface PlayerLeaderBoard {
+    player: Player;
+    leaderboards: {
+        leaderboard: Leaderboard;
+        rank: number;
+        elims: number;
+    }[];
+}
+interface LeaderboardData {
+    leaderboard: Leaderboard;
+    entries: Entry[];
+}
+```
 ## Implementation Details
 <!---
 Detailed description of how to achieve the design, additional diagrams, and analysis can go here. Feel free to add additional subheadings as needed, such as Dependencies and Risks.

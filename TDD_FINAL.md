@@ -75,6 +75,15 @@ Description of the architecture and diagrams. Feel free to add additional subhea
 <!---
 Include any description or wireframe of the solution UI design.
 --->
+### Initial wireframe
+![image](assets/Leaderboard.png)
+### Improved wireframe
+![image](assets/Leaderboard-Imp.png)
+### UI components breakdown
+![image](assets/Components.png)
+### Empty data component
+![image](assets/EmptyData.png)
+
 The UI design will follow the provided wireframe [Leaderboard](assets/Leaderboard.png) and components can be extracted from the provided wireframe like this from top to bottom:
 - Main App Component which represent the whole application in the tree
 - A header component that contains the application title and profile component
@@ -87,9 +96,7 @@ The UI design will follow the provided wireframe [Leaderboard](assets/Leaderboar
 - A component to display a message indicating that no data is available (Provide separate component for this)
 - A page display component indicating the current page number and total number of pages (Optional)
 
-Here is a picture of the modified wireframe that include the breakdown of the components
 
-![image](https://drive.google.com/uc?export=view&id=1CtrhKcCBuokm3KAz-3tJ9xteRti449vS)
 ### Architecture design
 <!---
 Include any diagrams and discussion of solution architecture.
@@ -134,6 +141,8 @@ Here is a simple representation of the UI components tree:
 <!---
 Include any diagrams of flows through the solution such as decision trees or data flow.
 --->
+Here is the sequence diagram that illustrates the flow of the leaderboard web application
+![image](assets/SequenceDiagram.png)
 ### Data models
 <!---
 Include any data modeling or schemas, including relationships between different data models

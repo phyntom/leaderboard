@@ -28,8 +28,8 @@ The story might be written as follows:
 ## Story
 
 ### User Stories
-As a player, I would like to be able to view leaderboads on the web so I can share my placement
-with people outside of the game.
+As a player, I would like to be able to view leaderboards on the web, so I can share my placement
+with people outside the game.
 
 As a player, I would like to be able to view the top 10 players for each game mode.
 

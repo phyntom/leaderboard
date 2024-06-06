@@ -326,7 +326,7 @@ Document how the application can be scaled to handle increased load.
 This section will provide a high-level overview of how the application can be scaled to handle increased load.
 To explain this we will use a diagram to illustrate how the application can be scaled horizontally to handle increased load
 to avoid making the document long for our readers
-![image](assets/AppScaling.png)
+<a name="scaling">![image](assets/AppScaling.png)</a>
 
 Here is the summary of the technologies and services that can be used to scale the application:
 * **Infrastructure**: ECS/EKS/App Runner, AWS/GCP Auto Scaling, AWS ELB, Global CDN
@@ -338,7 +338,7 @@ Here is the summary of the technologies and services that can be used to scale t
 * **Frontend**: We can leverage React.js library and other libraries in its ecosystem to build a scalable and maintainable frontend application
 * **WebSocket scaling**: To scale WebSocket connections, we can leverage AWS AppSync or any other managed WebSocket service that can handle millions of concurrent connections
 * **Static Asset**: AWS S3, CloudFront to store frontend assets and serve them globally with low latency
-* **Monitoring**: Even thought this was not indicated in the diagram below, we can leverage tools like Datadog or Sentry for application performance monitoring,
+* **Monitoring**: Even thought this was not indicated in the diagram [above](#scaling), we can leverage tools like Datadog or Sentry for application performance monitoring,
   and AWS CloudWatch for monitoring AWS services and resources.
 * **Security**: OAuth2, JWT, Rate Limiting
 
